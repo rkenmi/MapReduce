@@ -6,7 +6,13 @@ package main
 // go build -buildmode=plugin wc.go
 //
 
-import "../mr"
+import (
+	"../mr"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+)
 import "unicode"
 import "strings"
 import "strconv"
@@ -41,4 +47,20 @@ func Map(filename string, contents string) []mr.KeyValue {
 func Reduce(key string, values []string) string {
 	// return the number of occurrences of this word.
 	return strconv.Itoa(len(values))
+}
+
+func main() {
+	filename := "pg-grimm.txt"
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Println(err)
+		log.Fatalf("cannot open %v", filename)
+	}
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatalf("cannot read %v", filename)
+	}
+	file.Close()
+	res := Map(filename, string(content))
+	fmt.Println(res)
 }

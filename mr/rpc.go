@@ -24,6 +24,43 @@ type ExampleReply struct {
 
 // Add your RPC definitions here.
 
+type TaskArgs struct {
+}
+
+type Task struct {
+	NReduce      int
+	NMap         int
+	Filename     string
+	MapTaskId    int
+	ReduceTaskId int
+	Acknowledged bool
+}
+
+type MapStatusRequest struct {
+	Filename string
+	Status   int
+}
+
+type MapStatusAck struct {
+	Acknowledged bool
+}
+
+type MapStatus struct {
+	Done bool
+}
+
+type ReduceStatusRequest struct {
+	ReduceId int
+	Status   int
+}
+
+type ReduceStatusAck struct {
+	Acknowledged bool
+}
+
+type ReduceStatus struct {
+	Done bool
+}
 
 // Cook up a unique-ish UNIX-domain socket name
 // in /var/tmp, for the master.
