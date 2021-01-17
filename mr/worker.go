@@ -152,16 +152,17 @@ func StoreIntermediate(mapTaskId int, nReduce int, intermediate []KeyValue) {
 	}
 	for reduceId, kvSlices := range reduceTable {
 		intermediateFilename := "mr-" + strconv.Itoa(mapTaskId) + "-" + strconv.Itoa(reduceId)
-		file, err := os.Open(intermediateFilename)
+		temp, err := ioutil.TempFile("", intermediateFilename)
 		if err != nil {
-			file, _ = os.Create(intermediateFilename)
+			temp, _ = os.Create(intermediateFilename)
 		}
 
-		enc := json.NewEncoder(file)
+		enc := json.NewEncoder(temp)
 		for _, kv := range kvSlices {
 			enc.Encode(&kv)
 		}
-		file.Close()
+		temp.Close()
+		os.Rename(temp.Name(), intermediateFilename)
 	}
 }
 
